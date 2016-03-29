@@ -28,7 +28,7 @@ function loadJson() {
         obj.email;
     }
   };
-  xhttp.open("GET", "support-json.txt", true);
+  xhttp.open("GET", "web_service/support-json.txt", true);
   xhttp.send();
 }
 

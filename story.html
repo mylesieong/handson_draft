@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="gb2323">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Home page of Handson, a social entreprise devoted on connecting technology and social issue">
+		<meta name="author" content="Myles Ieong">
+		<meta name="robots" content="index, follow">
+		<title>Handson:story page</title>
+		
+		<!-- icons -->
+		<link rel="apple-touch-icon" href="media/apple-touch-icon.png">
+		<link rel="shortcut icon" href="media/favicon.ico">
+		
+		<!-- CSS file -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/styles.css">
+		<link rel="stylesheet" href="css/carousel.css">
+
+		<!-- JQuery scripts and Bootstrap Core scripts -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="js/webservice.js"></script>
+		
+		<!-- Story page js function -->
+		<script>
+		/**
+		 * Base on Ajax calls, these action is isolated with each other by body but connected
+		 * by callerDispatcher function in js/webservice.js. 
+		 * In this case, every page needs to register its process to callerDispatcher.
+		 * In story page(this page), the dispatching process follows:
+		 *  htmlonload
+		 *    ->getLatestCaller-------------------------->storyService (/story?op=get-latest)
+		 *                                                                             |
+		 *      getStories<--------------(dispatch to)---------------------------------/
+		 *        |
+		 *        \-------------------------------------->storyService (/story?op=get-story)
+		 *                                                                             |
+		 *      appendStory<-------------(dispatch to)---------------------------------/
+		 */
+		function getLatestCaller(){
+			//alert("getLatestCaller");
+			storyService("story:getLatestCaller","get-latest",5,null);
+		}
+		
+		function getStories(data){
+			//alert("getStories");
+			var jsonObj=JSON.parse(data);
+			$.each(jsonObj, function(){
+				var id=this;
+				//alert("getStories: get story id:"+id);
+				storyService("story:getStoryCaller","get-story",id,null);
+			});
+		}
+		
+		function appendStory(data){
+			//alert("appendStory");
+			var jsonObj=JSON.parse(data);
+			var clone = $("#template").clone();
+			clone.find("img").prop("src",jsonObj.picture);
+			clone.find(".panel-header h4").text( jsonObj.title );
+			clone.find(".panel-body").text( jsonObj.content );
+			clone.prop("style"," ");
+			//clone.find('.score').text( playerObj.score );
+			//clone.find('.profile-pic img').prop( 'src', playerObj.pic );
+			$("#story-list").append(clone);
+		};
+		
+		</script>
+	</head>
+	<body onload="getLatestCaller();">
+	<header>
+		<div class="container">
+			<div class="page-header">
+				<h1 class="text-center">Handson</h1>      
+			</div>
+		</div>
+	</header>
+	<nav>
+		<div class="container">
+			<ul class="nav nav-pills nav-justified">
+				<li class="active"><a href="#">主頁</a></li>
+				<li><a href="#">故事</a></li>
+				<li><a href="#">產品技術</a></li>
+				<li><a href="#">CSR方案</a></li>
+				<li><a href="#">尋翼</a></li>
+				<li><a href="#">加入我們</a></li>
+				<li><a href="#">關於我們</a></li>
+			</ul>
+		</div>
+	</nav>
+	<main>
+		<div class="container">
+			<div class="row">
+				<h2 class="margin-tb-1">我們的故事</h2>
+			</div>
+			
+			<div id="story-list" class="row">
+			<!--first panel: template -->
+			<div id="template" class="row margin-lr-1" style="display:none;" >
+				<div class="col-sm-2 text-center">
+					<img class="margin-tb-1" src="#" width=100em height=100em />
+				</div>
+				<div class="col-sm-10">
+					<div class="panel panel-default">
+						<div class="panel-header"><h4></h4></div>
+						<div class="panel-body"></div>
+						<div class="panel-footer small">
+							<a href="#">閱讀全文</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--/first panel: template -->
+			</div>
+		</div>
+	</main>
+	<footer>
+	
+	</footer>
+	</body>
+</html>
