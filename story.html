@@ -33,11 +33,11 @@
 		 *  htmlonload
 		 *    ->getLatestCaller-------------------------->storyService (/story?op=get-latest)
 		 *                                                                             |
-		 *      getStories<--------------(dispatch to)---------------------------------/
+		 *      getStories<-------(dispatched by callerDispatcher)---------------------/
 		 *        |
 		 *        \-------------------------------------->storyService (/story?op=get-story)
 		 *                                                                             |
-		 *      appendStory<-------------(dispatch to)---------------------------------/
+		 *      appendStory<------(dispatched by callerDispatcher)---------------------/
 		 */
 		function getLatestCaller(){
 			//alert("getLatestCaller");
